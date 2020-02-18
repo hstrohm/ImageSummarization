@@ -1,0 +1,5 @@
+# ignore Jupter checkpoints
+**.ipynb_checkpoints
+
+**data
+**ImageSummarization
