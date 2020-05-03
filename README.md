@@ -46,7 +46,7 @@ Oringal Image              | Contour Approach          | Mask Approach
 
 Ignoring the color issues in producing the mask based image, we can see that the contour approach performs better as many of the background objects are removed. While some background obejct still remain in this example, we are able to generate a more accurate description, as it won't discuss extraneous background people. However, in another example - pictured below - we can see the opposite happens, much of dog is removed from the image.
 
-Oringal Image              | Contours                  | Result                   
+Original Image             | Contours                  | Result                   
 :-------------------------:|:-------------------------:|:-------------------------:
 ![image](https://user-images.githubusercontent.com/35882267/80923897-e9098400-8d4b-11ea-84d3-1562082cb323.png) | ![image](https://user-images.githubusercontent.com/35882267/80924187-2e7a8100-8d4d-11ea-8535-6fcdd287f800.png) | ![image](https://user-images.githubusercontent.com/35882267/80924189-2e7a8100-8d4d-11ea-9316-2106579b865f.png)
 
@@ -60,16 +60,20 @@ However, this hasn’t given the desired results, as several non-focused and non
 
 We attempted an image segmentation tactic prior to learning about it in lecture, hoping it would cleanly remove the background and background objects. However, it performed very poorly. It removed inconsistent patches throughout the image, and wasn't very usable.
 
-Oringal Image              | Segmentation Mask         | Segmented Image           
+Original Image             | Segmentation Mask         | Segmented Image           
 :-------------------------:|:-------------------------:|:-------------------------:
 ![image](https://user-images.githubusercontent.com/35882267/80923897-e9098400-8d4b-11ea-84d3-1562082cb323.png) | ![image](https://user-images.githubusercontent.com/35882267/80923872-ddb65880-8d4b-11ea-94ac-55270f7ef51f.png)  |  ![image](https://user-images.githubusercontent.com/35882267/80923874-dee78580-8d4b-11ea-8ef8-fcdca9148e4d.png)
 
 We also attempted to explore the focus/blur detection techniques discussed in lecture. With the focus techniques, we were in a very similar position to our contour approach in some cases. But for many images, the main object in the foreground was removed, due to it being out of focus with the camera. Some hybrid approach of image focus, contours, and masking would probably work best for this project, however we were unable to implement a workable approach with our time constraints.
 
-#### Spacial Relationships
-After the backdrop is removed and the objects have been curated, we are left with just a few objects to determine how they relate to each other.
-This gets sent through our simple spatial relationship detector, which uses the object bounding boxes to determine possible words or phrases that describe their relationship.
-On screen, you can see that in the example of the dog and bowl, our detector returned a list of possible connecting phrases, which will be sent through our NLP algorithms to determine the best fitting connection.
+#### Spatial Relationships
+After the backdrop is removed and the objects have been curated, we are left with just a few objects to determine how they relate to each other. Each pair of objects is sent through our spatial relationship detector. It uses the bounding boxes of both objects to determine how they relate spatially to each other. Below is an example of the dog and bowl image having been sent through our detector. The detector distinguishes between the primary and complementary objects. For the below example, dog was the primary object and the bowl is complementary.
+
+Original Image             | List of connecting phrases
+:-------------------------:|:-------------------------:
+![image](https://user-images.githubusercontent.com/35882267/80923897-e9098400-8d4b-11ea-84d3-1562082cb323.png) | <ul><li>is beside</li><li>is to the right of</li><li>is adjacent to</li><li>is holding</li><li>overlaps</li></ul>
+
+So, one possible sentence that could be generated from this image is "The dog is beside the bowl." From the bounding boxes of the objects, the spatial relations detector uses the corners to detect how the boxes relate spatially to each other. The first thing is checks, is whether the complementary box is fully within the primary box. This produces a list of connecting phrases such as "is within", "is in", "is on", "is behind" and "is in front of." Failing the first check, the dectector looks to see if the complementary box surround the primary box, in other words if the primary box is within the complementary box. This produces connecting phrases such as "surrounds", "encompasses", "is behind", and "is in front of." Then it checks to see if the two objects directly overlap each other, in the form of a t. This yeilds connections such as "overlaps", "is behind", and "is in front of." Lastly, it checks each of the cardinal directions (in the x,y coordinate space) to see if the complementary box is above, below, left, or right of the primary box, this includes partial overlapping (meaning the majority of the complementary box lies outside the primary box). This produces the remaining phrases such as "is beside", "is adjacent to", "is above", "is below", "is holding", "overlaps", etc.
 
 #### Object Details
 Due to time constraints, we were only able to implement a color detection algorithm. Originally we have plans to implement algorithms for determing object size and shape as well, but these didn't pan out. For determining object color, we utilized the original image and the bounding boxes of all the detected objects. For each object, we searched the bounding box to determine the most common color. Because objects have shading, it would be difficult to naively count the occurances of each RGB color present, much less assign a color label. Instead we used a k-means clustering algorithm with 5 clusters. We would iterate over every color in the image, assigning them to a cluster, and updating the cluster means. When the means stopped moving, we took the cluster mean (an RGB value) that had the most support (the most colors assigned to that cluster) to represent the object's color. This mean cluster RGB value was then compared to every pre-defined webcolor (from the Python webcolor package). For each comparison a simple distance metric was calculated using the following equation:
