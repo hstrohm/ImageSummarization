@@ -33,24 +33,36 @@ The images that were utilized for our project came from the COCO validation data
 Passing the image through the model, it supplies us with bounding boxes, labels, and masks for each detected object.
 This information is stored for later use in our process.
 
+
 #### Backdrop Removal
-Next the image is passed on to our backdrop removal process.
-A natural first thought would be to use the masks to remove all non-detected objects.
-However this doesn’t work, as your image may have extra detected objects that aren’t relevant to the description of the image.
-For example, this picture of a tennis player keeps the detected people in the background when using the masks, just ignore the color skewing.
-However, when using a contour based approach, which we will talk about in a moment, we get a better result.
-With that in mind, we first tried an image segmentation tactic, hoping to cleanly remove the background while maining the main objects within the image.
-However, we ended up with an approach that wasn’t able to do either.
-Next, we moved on to a contour based approach. 
-While this worked considerably better, you can see it still isn’t perfect.
-However, due to time constraints we had to move on.
-As a component of our project, we decided to narrow down the results of the object recognition down to the foreground and focused items within an image. This was decided because we can get many images that have lots of things happening in the background, but aren’t the actual focus of the image itself. However, being able to determine which items are the focus (or the main components) of the image has been difficult. We’re using OpenCV’s GrabCut which allows us to remove specific components of an image. We’ve attempted detecting foreground vs background objects by use of the contours within an image. 
-However, this hasn’t given the desired results, as many non-focused and non-foreground items remain in the resulting image. One potential solution to explore would be to utilize the focus/blur detection techniques discussed in lecture. We could transform our input image using the Fast Fourier Transform and a Laplacian Kernel, then analyze the areas of higher frequency (ignoring the lower frequency parts of the image). This would give us the focused objects, but will require some experimentation with threshold values; as setting the threshold too high might remove some of the image context, while too low will include too much non-focused content. 
+For the backdrop removal, we settled with a contour based approach. It worked reasonably well with most images, usually only failing to remove a few background objects. At first, we considered using a mask based approach to remove the background. This would work, but we would be left with all detected objects, something that wasn't desired, rather than the removal of most of them. Below is an example of this, using a picture of a man playing tennis with onlookers.
+
+![image](https://user-images.githubusercontent.com/35882267/80923459-962ecd00-8d49-11ea-8dc1-4e236910f5c7.png)
+
+Ignoring the color issues in producing the mask based image, we can see that the contour approach performs better as many of the background objects are removed. While some background obejct still remain in this example, we are able to generate a more accurate description, as it won't discuss extraneous background people. However, in another example - pictured below - we can see the opposite happens, much of dog is removed from the image.
+
+![image](https://user-images.githubusercontent.com/35882267/80923654-8f548a00-8d4a-11ea-8aa2-75487a44022f.png)
+
+As part of the backdrop removal process, we reduce the number of detected objects. Starting with all detected objects and the contoured image, we iterate over every object. If every point within the object's mask is removed (i.e. completely black), then the object's data is thrown out. After all removed objects are thrown out, we send the results to the spatial relations detector.
+
+
+#### Backdrop Issues
+As a component of our project, we decided to narrow down the results of the object recognition down to the foreground and focused items within an image. This was decided because we can get many images that have lots of events occuring in the background, but aren’t the actual focus of the image itself. However, being able to determine which items are the focus (or the main components) of the image has been difficult. We’re using OpenCV’s GrabCut which allows us to remove specific components of an image. We’ve attempted detecting foreground vs background objects by use of the contours within an image. 
+However, this hasn’t given the desired results, as several non-focused and non-foreground items remain in the resulting image. We were unable to perfect this approach, and time ran out for us to do so.
+
+We attempted an image segmentation tactic prior to learning about it in lecture, hoping it would cleanly remove the background and background objects. However, it performed very poorly. It removed inconsistent patches throughout the image, and wasn't very usable.
+
+Oringal Image              | Segmentation Mask         | Segmented Image           
+:-------------------------:|:-------------------------:|:-------------------------:
+![image](https://user-images.githubusercontent.com/35882267/80923897-e9098400-8d4b-11ea-84d3-1562082cb323.png) | ![image](https://user-images.githubusercontent.com/35882267/80923872-ddb65880-8d4b-11ea-94ac-55270f7ef51f.png)  |  ![image](https://user-images.githubusercontent.com/35882267/80923874-dee78580-8d4b-11ea-8ef8-fcdca9148e4d.png)
+
+We also attempted to explore the focus/blur detection techniques discussed in lecture. With the focus techniques, we were in a very similar position to our contour approach in some cases. But for many images, the main object in the foreground was removed, due to it being out of focus with the camera. Some hybrid approach of image focus, contours, and masking would probably work best for this project, however we were unable to implement a workable approach with our time constraints.
 
 #### Spacial Relationships
 After the backdrop is removed and the objects have been curated, we are left with just a few objects to determine how they relate to each other.
 This gets sent through our simple spatial relationship detector, which uses the object bounding boxes to determine possible words or phrases that describe their relationship.
 On screen, you can see that in the example of the dog and bowl, our detector returned a list of possible connecting phrases, which will be sent through our NLP algorithms to determine the best fitting connection.
+
 #### Object Details
 Due to time constraints, we were only able to implement a color detection algorithm. Originally we have plans to implement algorithms for determing object size and shape as well, but these didn't pan out. For determining object color, we utilized the original image and the bounding boxes of all the detected objects. For each object, we searched the bounding box to determine the most common color. Because objects have shading, it would be difficult to naively count the occurances of each RGB color present, much less assign a color label. Instead we used a k-means clustering algorithm with 5 clusters. We would iterate over every color in the image, assigning them to a cluster, and updating the cluster means. When the means stopped moving, we took the cluster mean (an RGB value) that had the most support (the most colors assigned to that cluster) to represent the object's color. This mean cluster RGB value was then compared to every pre-defined webcolor (from the Python webcolor package). For each comparison a simple distance metric was calculated using the following equation:
 <img src="https://render.githubusercontent.com/render/math?math=\sum_{i \in {red, green, blue}} (i_{webcolor} - i_{cluster})^2">. The webcolor with the smallest distance value was then selected and its label was used to describe the object.
