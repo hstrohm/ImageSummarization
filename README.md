@@ -37,11 +37,18 @@ This information is stored for later use in our process.
 #### Backdrop Removal
 For the backdrop removal, we settled with a contour based approach. It worked reasonably well with most images, usually only failing to remove a few background objects. At first, we considered using a mask based approach to remove the background. This would work, but we would be left with all detected objects, something that wasn't desired, rather than the removal of most of them. Below is an example of this, using a picture of a man playing tennis with onlookers.
 
-![image](https://user-images.githubusercontent.com/35882267/80923459-962ecd00-8d49-11ea-8dc1-4e236910f5c7.png)
+
+Oringal Image              | Contour Approach          | Mask Approach             
+:-------------------------:|:-------------------------:|:-------------------------:
+<img src="https://user-images.githubusercontent.com/35882267/80924212-4c47e600-8d4d-11ea-8b70-6ecb1387235a.png" width="181" height="279" /> | <img src="https://user-images.githubusercontent.com/35882267/80924214-4ce07c80-8d4d-11ea-9db5-558fbfa572b0.png" width="181" height="279" /> | <img src="https://user-images.githubusercontent.com/35882267/80924215-4ce07c80-8d4d-11ea-98f3-f823b507c4bb.png" width="181" height="279" />
+
 
 Ignoring the color issues in producing the mask based image, we can see that the contour approach performs better as many of the background objects are removed. While some background obejct still remain in this example, we are able to generate a more accurate description, as it won't discuss extraneous background people. However, in another example - pictured below - we can see the opposite happens, much of dog is removed from the image.
 
-![image](https://user-images.githubusercontent.com/35882267/80923654-8f548a00-8d4a-11ea-8aa2-75487a44022f.png)
+Oringal Image              | Contours                  | Result                   
+:-------------------------:|:-------------------------:|:-------------------------:
+![image](https://user-images.githubusercontent.com/35882267/80923897-e9098400-8d4b-11ea-84d3-1562082cb323.png) | ![image](https://user-images.githubusercontent.com/35882267/80924187-2e7a8100-8d4d-11ea-8535-6fcdd287f800.png) | ![image](https://user-images.githubusercontent.com/35882267/80924189-2e7a8100-8d4d-11ea-9316-2106579b865f.png)
+
 
 As part of the backdrop removal process, we reduce the number of detected objects. Starting with all detected objects and the contoured image, we iterate over every object. If every point within the object's mask is removed (i.e. completely black), then the object's data is thrown out. After all removed objects are thrown out, we send the results to the spatial relations detector.
 
