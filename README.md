@@ -25,7 +25,7 @@ Another approach to this program has utilized a dependency tree recurrent neural
 #### Overview
 In order to achieve our goal, we designed a system that would allow us to provide some textual descriptions of an input image. Below is an pictural overview of how our system works. Starting from the left side, we begin with supplying the system with some input image. Next we perform multiple-object detection, getting boundary boxes, masks, and labels for each detected object in the image. From here, the image is sent to two stages, a backdrop removal as well as an object property detector. The backdrop removal process attempts to remove items that aren’t the focus of the image, as well as the background scene. During this phase, stored objects that are no longer in the image are removed. The remaining objects and image is then sent through a spatial relations detector, which determines how two objects in an image are related in terms of their relative position in the image. For the object properties functions, these were initially intended to include object color, shape, and size; but due to time constraints only object color was implemented. The results of the color detection are used to describe the objects within the NLP generated sentences. Using the results of both the spatial relation detector and object properties, our NLP algorithm generates a textual description of the image.
 
-![image](https://user-images.githubusercontent.com/35882267/80924829-eb221180-8d50-11ea-9bcd-dcd096cd24a5.png)
+![image](https://user-images.githubusercontent.com/35882267/80925353-b912ae80-8d54-11ea-8250-aa6b477b6252.png)
 
 
 #### Object Detection
