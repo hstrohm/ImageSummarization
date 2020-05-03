@@ -22,17 +22,18 @@ Several studies have been conducted in regards to spatial based object associati
 Another approach to this program has utilized a dependency tree recurrent neural network (DT-RNN) in order to associate text with an image [3]. The authors’ approach was to be able to map sentences to an image visualization of the text, and vice versa. They did not attempt to generate sentences for the given image, but rather used the sentences provided from their dataset. Lastly, even similarity based search has been explored [4]. Gathering images from Flickr, with their user specified captions, the authors simply search the dataset and attempt to find the image that matches the query the most. Once found, it takes the associated user-specified caption for the dataset image and assigns it to the query image.
 
 ### Our Process
+#### Overview
 In order to achieve our goal, we designed a system that would allow us to provide some textual descriptions of an input image. After supplying an input image, we perform multiple-object detection, getting boundary boxes, masks, and labels for each object. From here, the image is sent to two stages, a backdrop removal as well as an object property detector.
 The backdrop removal process attempts to remove items that aren’t the focus of the image.
 Using the remaining portions of the image, this is sent through a spatial relations detector. Which determines how two objects in an image are related in terms of their position in the image. From the results of the spatial relation detector, the objects and their relationships are turned into sentences using NLP techniques. For the object properties functions, these were intended to include object color, shape, etc; but due to time constraints only object color was implemented. The results of the object property functions are generated into simple sentences and then combined with the results of our NLP outputs to produce a textual description of the input image.
 
-### Object Detection
+#### Object Detection
 For object detection, we utilized a pretrained MASK RCNN from Python’s Pytorch package.
 The images that were utilized for our project came from the COCO validation dataset. 
 Passing the image through the model, it supplies us with bounding boxes, labels, and masks for each detected object.
 This information is stored for later use in our process.
 
-### Backdrop Removal
+#### Backdrop Removal
 Next the image is passed on to our backdrop removal process.
 A natural first thought would be to use the masks to remove all non-detected objects.
 However this doesn’t work, as your image may have extra detected objects that aren’t relevant to the description of the image.
@@ -43,15 +44,15 @@ However, we ended up with an approach that wasn’t able to do either.
 Next, we moved on to a contour based approach. 
 While this worked considerably better, you can see it still isn’t perfect.
 However, due to time constraints we had to move on.
+As a component of our project, we decided to narrow down the results of the object recognition down to the foreground and focused items within an image. This was decided because we can get many images that have lots of things happening in the background, but aren’t the actual focus of the image itself. However, being able to determine which items are the focus (or the main components) of the image has been difficult. We’re using OpenCV’s GrabCut which allows us to remove specific components of an image. We’ve attempted detecting foreground vs background objects by use of the contours within an image. 
+However, this hasn’t given the desired results, as many non-focused and non-foreground items remain in the resulting image. One potential solution to explore would be to utilize the focus/blur detection techniques discussed in lecture. We could transform our input image using the Fast Fourier Transform and a Laplacian Kernel, then analyze the areas of higher frequency (ignoring the lower frequency parts of the image). This would give us the focused objects, but will require some experimentation with threshold values; as setting the threshold too high might remove some of the image context, while too low will include too much non-focused content. 
 
-### Spacial Relationships
+#### Spacial Relationships
 After the backdrop is removed and the objects have been curated, we are left with just a few objects to determine how they relate to each other.
 This gets sent through our simple spatial relationship detector, which uses the object bounding boxes to determine possible words or phrases that describe their relationship.
 On screen, you can see that in the example of the dog and bowl, our detector returned a list of possible connecting phrases, which will be sent through our NLP algorithms to determine the best fitting connection.
 
-### NLP: Sentence Building
-
-### Object Details
+#### Object Details
 Lastly, for determining details about the object, we take the original image and detected bounding boxes to figure out the colors of each object.
 We utilized a k-means clustering approach to determine the majority RGB value of the object.
 A distance metric was calculated between this RGB value and all predefined webcolors, in order to determine the closest color label.
@@ -62,6 +63,11 @@ These sentences were combined with the ones generated by our NLP algorithms in o
 Majority Cluster Color: Black </br>
 ![image](https://user-images.githubusercontent.com/54555630/80898648-81abef80-8ccb-11ea-97fe-749e4b716a2f.png) </br>
 Majority Cluster Color: Dim Grey
+
+#### NLP: Sentence Building
+
+### Evaluation
+To evaluate our algorithm, we propose multiple methods. The first method would be to test if humans can determine which audio recording or text transcriptions match with which image. This will help us determine if our description is understandable and accurate. The next method would be to test if a computer algorithm can match our description with the correct image using the algorithm created by Socher et al. or [3] Finally, we can create a set of descriptions for each image by hand, and present them to people to see if they can pick out the generated description. This will help us to determine how natural our descriptions sound.
 
 ### Results
 
@@ -75,12 +81,6 @@ At this point, we have a list of recognized objects and their bounding boxes. Ou
 We plan to also use a similar NLP-based approach in order to determine the most likely action to be occurring between two objects. While unsure of its potential success, we hope that this will produce moderate results. 
 Depending on how the above goes, we may have to cut out our plan to add object details. However, we have a plan to get basic information about items from the image. This would likely just add up to two adjectives per sentence, which would help with realism. If rushed, though, it could introduce inaccuracies. 
 
-### What has failed and how will we fix it?
-As a component of our project, we decided to narrow down the results of the object recognition down to the foreground and focused items within an image. This was decided because we can get many images that have lots of things happening in the background, but aren’t the actual focus of the image itself. However, being able to determine which items are the focus (or the main components) of the image has been difficult. We’re using OpenCV’s GrabCut which allows us to remove specific components of an image. We’ve attempted detecting foreground vs background objects by use of the contours within an image. 
-However, this hasn’t given the desired results, as many non-focused and non-foreground items remain in the resulting image. One potential solution to explore would be to utilize the focus/blur detection techniques discussed in lecture. We could transform our input image using the Fast Fourier Transform and a Laplacian Kernel, then analyze the areas of higher frequency (ignoring the lower frequency parts of the image). This would give us the focused objects, but will require some experimentation with threshold values; as setting the threshold too high might remove some of the image context, while too low will include too much non-focused content. 
-
-### Evaluation
-To evaluate our algorithm, we propose multiple methods. The first method would be to test if humans can determine which audio recording or text transcriptions match with which image. This will help us determine if our description is understandable and accurate. The next method would be to test if a computer algorithm can match our description with the correct image using the algorithm created by Socher et al. or [3] Finally, we can create a set of descriptions for each image by hand, and present them to people to see if they can pick out the generated description. This will help us to determine how natural our descriptions sound.
 
 We expect to show examples of images and their generated summaries. We can also show what the algorithm produced at different stages of development. We will also outline and analyze the results of our evaluation. 
 
