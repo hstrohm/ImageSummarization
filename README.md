@@ -17,11 +17,10 @@ Image Example: "The bear is black." is the computer generated response.|
 
 
 ### Project Impact
-The solution to this problem would automate the process of detecting objects, using that information to interpret the relationships between those objects, and finally translate that information into a textual description that could later be converted into audio. There are a couple of reasons to solve this problem. First, it could provide access to images for people who are visually impaired or blind. The ability for a computer to analyze and describe an image accurately and in a way that is helpful would have the possibility of improving their daily experience navigating the world of images that exists today. Another useful application of image summarization would be to be able to include descriptions of images in an audio book, paper, or other text that is being listened to rather than read. Images can contain information important to a text, and therefore it would be useful to be able to include images in a text-to-speech algorithm. 
+The solution to this problem would automate the process of detecting objects, using that information to interpret the relationships between those objects, and finally translate that information into audio. There are a couple of reasons to solve this problem. First, it could provide access to images for people who are visually impaired or blind. The ability for a computer to analyze and describe an image accurately and in a way that is helpful would have the possibility of improving their daily experience navigating the world of images that exists today. Another useful application of image summarization would be to be able to include descriptions of images in an audio book, paper, or other text that is being listened to rather than read. Images can contain information important to a text, and therefore it would be useful to be able to include images in a text-to-speech algorithm. 
 
 ### Current State of the Art
 Several studies have been conducted in regards to spatial based object association [1,2]. Falomir et al. [1] explored explaining images through an object’s visual characteristics as well as its spatial characteristics. All descriptions are qualitative, and not sentences meant for simply describing the image to the end-user. They also utilized a very small dataset, consisting only of a hallway from their building and the objects within it. Elliot et al. [2] explored the use of a visual dependency representation (VDR) model that looks at recognized object positions in order to determine how sentence structure should be formulated. For their study, they used a pre-trained R-CNN that would detect the objects for them, and utilized the detected objects and their image properties to describe the image’s content.
-
 Another approach to this program has utilized a dependency tree recurrent neural network (DT-RNN) in order to associate text with an image [3]. The authors’ approach was to be able to map sentences to an image visualization of the text, and vice versa. They did not attempt to generate sentences for the given image, but rather used the sentences provided from their dataset. Lastly, even similarity based search has been explored [4]. Gathering images from Flickr, with their user specified captions, the authors simply search the dataset and attempt to find the image that matches the query the most. Once found, it takes the associated user-specified caption for the dataset image and assigns it to the query image.
 
 ### Our Process
@@ -108,10 +107,14 @@ Results of k-means clustering for the bowl object. Majority Cluster Color: Dim G
 
 
 #### NLP: Sentence Building
-(From Midterm report)
-At this point, we have a list of recognized objects and their bounding boxes. Our plan is to use the bounding boxes to generate a list of potential prepositions based on how the bounding boxes overlap. From this list of prepositions, combined with the labeled objects, we will use models from NLP in order to find the most likely way the two objects relate. For example, if we have a book above a table, possible prepositions include ‘on’, ‘in’, and ‘above’. The NLP model will inform us which potential phrasing is the most natural. To continue our previous example, our NLP model would tell us that “the book is on the table” is more natural than “the table is on the book.”
-We plan to also use a similar NLP-based approach in order to determine the most likely action to be occurring between two objects. While unsure of its potential success, we hope that this will produce moderate results. 
-Depending on how the above goes, we may have to cut out our plan to add object details. However, we have a plan to get basic information about items from the image. This would likely just add up to two adjectives per sentence, which would help with realism. If rushed, though, it could introduce inaccuracies. 
+Our NLP algorithm uses the results from our spatial relation detector and object properties algorithms to generate sentences about the image. As mentioned above, the spatial relation detector returns connecting phrases that could describe the relationship between two objects. Using average word vector similarity between each connecting phrase and the two objects, the algorithm picks the connecting phrase with the highest average. In other words, this should pick the connecting phrase that most commonly appears with the two objects in question.  
+
+As for adding color to the sentences, we tried two methods. The first of which is simply adding sentences such as "A dog is yellow." for each label after our previously generated sentences. The second method, which we decided to use with our final results, is to add the color of each object to the first point at which they appear in the spatial relation sentences.  
+
+Two other small things that are done are picking an appropriate article (a/the) and, in the instance of having three or more instances of the same label, summarizing them in one sentence. 
+
+Some example sentences would look like: 
+
 
 ### Evaluation and Results
 We used a survey to gather information on how successful our captions were, which includes a matching section, and questions about the naturalness and helpfulness of the captions. The matching section had four questions that had a caption and three possible options for a corresponding image. For each question, the order of the options was randomized for each participant. The respondents got one question correct, and for the other three questions the correct answer was the second most common. This shows that the captions are not as effective as they could be yet. They are somewhat understandable but not completely clear. We also had the respondents rate how natural the captions sounded and there was an overall average of around 2.5, which is exactly in the middle of the rating scale that we used. The averages for the individual questions range from 1.6 to 3.6, which suggest that we could improve the naturalness of the captions quite a bit. It also suggests that some captions are better than others. We also measured helpfulness and found a similar range with an overall average 2.7. This suggests that the captions would need to improve the captioning before it could be useful to people. Overall, our captions were found to be alright but with a lot of room for improvement.
@@ -155,7 +158,7 @@ The following table and graph shows the average helpfulness of the caption as ra
 Our survey is linked [here](https://docs.google.com/forms/d/1AErXKhsPgB2svVDI0yZcdJ-jh3XHiOOCuka5DMcZZtM/edit?ts=5eaef2a2). </br>
 
 ### Key Takeaways
-
+* When many objects are detected, it is hard to succinctly summarize the image as it's hard to determine which of those objects are the most important in this case. Something like size would miss important small objects and detection certainly from the NN doesn't make sense at all. 
 
 ### References
 1. Falomir, Zoe, et al. "Describing images using qualitative models and description logics." Spatial Cognition & Computation 11.1 (2011): 45-74.
