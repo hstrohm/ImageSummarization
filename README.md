@@ -33,6 +33,7 @@ For object detection, we utilized a pretrained MASK RCNN from Python’s Pytorch
 The images that were utilized for our project came from the COCO validation dataset. 
 Passing the image through the model, it supplies us with bounding boxes, labels, and masks for each detected object.
 This information is stored for later use in our process.
+From our original plans, we have completed both object and boundary detections. We’re using a pre-trained Mask R-CNN model that was trained on the COCO dataset. This output of the model provides object labels and finds the boundaries of the detected object. From the recognized objects, we have a confidence threshold value of 75% that must be met for us to move forward with that object. This ignores most of the non-focal objects that were “detected.” The image above shows an example of an output image after this process.
 
 
 #### Backdrop Removal
@@ -97,8 +98,12 @@ Results of k-means clustering for the bowl object. Majority Cluster Color: Dim G
 
 
 #### NLP: Sentence Building
+(From Midterm report)
+At this point, we have a list of recognized objects and their bounding boxes. Our plan is to use the bounding boxes to generate a list of potential prepositions based on how the bounding boxes overlap. From this list of prepositions, combined with the labeled objects, we will use models from NLP in order to find the most likely way the two objects relate. For example, if we have a book above a table, possible prepositions include ‘on’, ‘in’, and ‘above’. The NLP model will inform us which potential phrasing is the most natural. To continue our previous example, our NLP model would tell us that “the book is on the table” is more natural than “the table is on the book.”
+We plan to also use a similar NLP-based approach in order to determine the most likely action to be occurring between two objects. While unsure of its potential success, we hope that this will produce moderate results. 
+Depending on how the above goes, we may have to cut out our plan to add object details. However, we have a plan to get basic information about items from the image. This would likely just add up to two adjectives per sentence, which would help with realism. If rushed, though, it could introduce inaccuracies. 
 
-### Evaluation
+### Evaluation and Results
 We used a survey to gather information on how successful our captions were, which includes a matching section, and questions about the naturalness and helpfulness of the captions. The matching section had four questions that had a caption and three options for a corresponding image. The respondents got half of the questions correct, and for the other two questions, the correct answer was the second most common. This shows that the captions are not as effective as they could be yet. They are somewhat understandable but not completely clear. We also had the respondents rate how natural the captions sounded and there was an overall average of around 2.5, which is exactly in the middle of the rating scale that we used. The averages for the individual questions range from 1.6 to 3.6, which suggest that we could improve the naturalness of the captions quite a bit. It also suggests that some captions are better than others. We also measured helpfulness and found a similar range with an overall average 2.7. This suggests that the captions would need to improve the captioning before it could be useful to people. Overall, our captions were found to be alright but with a lot of room for improvement.
 
 The captions that each of the next three tables reference are stored here.
@@ -109,21 +114,27 @@ The captions that each of the next three tables reference are stored here.
 ![image](https://user-images.githubusercontent.com/54555630/80942644-ed18be80-8daa-11ea-934a-9fbc0ca3c9ec.png) </br> 
 This is an example of a matching question in the survey.
 
-The following table shows the number of people that chose each option for each question in the matching section. The correct answer for each is starred. As you can see, captions three and four most people got correct, but captions one and two were not.
+The following table and graph shows the number of people that chose each option for each question in the matching section. The correct answer for each is starred. As you can see, captions three and four most people got correct, but captions one and two were not.
+
+![Counts of Image Selection by Option](https://user-images.githubusercontent.com/35882267/80967266-ac856900-8ddb-11ea-91b9-14a4293d95ad.png)
 
 |          | C1     | C2     | C3     | C4     |
 |:--------:|:------:|:------:|:------:|:------:|
-| Option 1 | 7*    	| 7*  	 | 8	    | 18*    |
-| Option 2 | 3      | 1      | 13*    | 5      |
+| Option 1 | 7*    	| 7*  	 | 8*	    | 18*    |
+| Option 2 | 3      | 1      | 13    | 5      |
 | Option 3 | 12     | 13     | 1      | 0      |
 
-The following table shows the average naturalness of the caption as rated by each respondant. This section gives the image and the corresponding caption and asks the respondant to rate how natural the sentence is on a scale from one to five.
+The following table and graph shows the average naturalness of the caption as rated by each respondant. This section gives the image and the corresponding caption and asks the respondant to rate how natural the sentence is on a scale from one to five.
+
+![Mean Naturalness Score by Question](https://user-images.githubusercontent.com/35882267/80967263-ac856900-8ddb-11ea-9ccd-c29bbecfba97.png)
 
 | C1     | C2     | C3     | C4     | Total  |
 |:------:|:------:|:------:|:------:|:------:|
 | 1.565  | 2.217  | 2.696	 | 3.609  | 2.522  |
 
-The following table shows the average helpfulness of the caption as rated by each respondant. This section gives the image and the corresponding caption and asks the respondant to rate how helpful the sentence is on a scale from one to five.
+The following table and graph shows the average helpfulness of the caption as rated by each respondant. This section gives the image and the corresponding caption and asks the respondant to rate how helpful the sentence is on a scale from one to five.
+
+![Mean Helpfulness Score by Question](https://user-images.githubusercontent.com/35882267/80967262-abecd280-8ddb-11ea-8053-da858f83782b.png)
 
 | C1     | C2     | C3     | C4     | Total  |
 |:------:|:------:|:------:|:------:|:------:|
@@ -131,20 +142,8 @@ The following table shows the average helpfulness of the caption as rated by eac
 
 Our survey is linked [here](https://docs.google.com/forms/d/1AErXKhsPgB2svVDI0yZcdJ-jh3XHiOOCuka5DMcZZtM/edit?ts=5eaef2a2). </br>
 
-### Results
+### Key Takeaways
 
-### Original Plan
-We have not deviated too far from the original plan so far. The first step was to detect what the most prominent objects in the image were, where they were located, and other features about these objects such as color or if two objects are touching. We accomplished most of this using a pre-trained Mask R-CNN model that was trained on the COCO dataset, besides the extra features. We are currently working on determining relationships between objects using distance and NLP algorithms, which are a part of our original plan. The final step in our original plan was to use NLP to create actual sentences using word similarity. The following section has more details on what we have accomplished so far, and our updated plans for the future. The section following that details what didn’t work for us and what we are currently having issues with. <br/>
-![image](https://user-images.githubusercontent.com/54555630/80898352-01d05600-8cc8-11ea-8208-25b5ccd6bdd3.png)
-
-### Current Progress/New Updates
-From our original plans, we have completed both object and boundary detections. We’re using a pre-trained Mask R-CNN model that was trained on the COCO dataset. This output of the model provides object labels and finds the boundaries of the detected object. From the recognized objects, we have a confidence threshold value of 75% that must be met for us to move forward with that object. This ignores most of the non-focal objects that were “detected.” The image above shows an example of an output image after this process.
-At this point, we have a list of recognized objects and their bounding boxes. Our plan is to use the bounding boxes to generate a list of potential prepositions based on how the bounding boxes overlap. From this list of prepositions, combined with the labeled objects, we will use models from NLP in order to find the most likely way the two objects relate. For example, if we have a book above a table, possible prepositions include ‘on’, ‘in’, and ‘above’. The NLP model will inform us which potential phrasing is the most natural. To continue our previous example, our NLP model would tell us that “the book is on the table” is more natural than “the table is on the book.”
-We plan to also use a similar NLP-based approach in order to determine the most likely action to be occurring between two objects. While unsure of its potential success, we hope that this will produce moderate results. 
-Depending on how the above goes, we may have to cut out our plan to add object details. However, we have a plan to get basic information about items from the image. This would likely just add up to two adjectives per sentence, which would help with realism. If rushed, though, it could introduce inaccuracies. 
-
-
-We expect to show examples of images and their generated summaries. We can also show what the algorithm produced at different stages of development. We will also outline and analyze the results of our evaluation. 
 
 ### References
 1. Falomir, Zoe, et al. "Describing images using qualitative models and description logics." Spatial Cognition & Computation 11.1 (2011): 45-74.
