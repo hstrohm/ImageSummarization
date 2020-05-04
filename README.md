@@ -29,12 +29,19 @@ In order to achieve our goal, we designed a system that would allow us to provid
 
 
 #### Object Detection
-For object detection, we utilized a pretrained MASK RCNN from Python’s Pytorch package.
-The images that were utilized for our project came from the COCO validation dataset. 
-Passing the image through the model, it supplies us with bounding boxes, labels, and masks for each detected object.
-This information is stored for later use in our process.
-From our original plans, we have completed both object and boundary detections. We’re using a pre-trained Mask R-CNN model that was trained on the COCO dataset. This output of the model provides object labels and finds the boundaries of the detected object. From the recognized objects, we have a confidence threshold value of 75% that must be met for us to move forward with that object. This ignores most of the non-focal objects that were “detected.” The image above shows an example of an output image after this process.
+For object detection, we utilized a pretrained MASK RCNN from Python’s Pytorch package, with images from the COCO validation dataset. Each image that is passed through the model results in bounding boxes, labels, and masks for each detected object in the image. This information is stored for later use in our process. The model detects many objects that either aren't there or are incorrectly detected. To counteract this, we set a confidence threshold of 75% that must be met before we accept the classification of an object. This also had the added bonus of ignoring most of the non-focal objects within the image. Below is an example of below and after this threshold was set.
 
+Before Threshold           | After Threshold           |
+:-------------------------:|:-------------------------:|
+![before_threshold](https://user-images.githubusercontent.com/35882267/80971919-0dfd0600-8de3-11ea-8b8a-b1ec31490d6e.png) | ![after_threshold](https://user-images.githubusercontent.com/35882267/80971921-0e959c80-8de3-11ea-949c-2bdf60910f3e.png)
+
+Below is an example of the masks that were produced, along with their associated label.
+
+Oven                       | Microwave                 | Potted Plant              |
+:-------------------------:|:-------------------------:|:-------------------------:|
+![mask1](https://user-images.githubusercontent.com/35882267/80972491-c7f47200-8de3-11ea-8669-d739554d8bf4.png) | ![mask2](https://user-images.githubusercontent.com/35882267/80972490-c7f47200-8de3-11ea-8ded-52b6fbe2ea8d.png) | ![mask6](https://user-images.githubusercontent.com/35882267/80972493-c88d0880-8de3-11ea-9edb-f0d3441c5910.png)
+
+Given that we utilized a pretrained model for multi-object detection, we ran into very few errors. The biggest issue we faced was with the confidence intervals on detected objects and multiple labelings for each object, but this was easily remedied with a confidence threshold.
 
 #### Backdrop Removal
 For the backdrop removal, we settled with a contour based approach. It worked reasonably well with most images, usually only failing to remove a few background objects. At first, we considered using a mask based approach to remove the background. This would work, but we would be left with all detected objects, something that wasn't desired, rather than the removal of most of them. Below is an example of this, using a picture of a man playing tennis with onlookers.
@@ -104,7 +111,7 @@ We plan to also use a similar NLP-based approach in order to determine the most 
 Depending on how the above goes, we may have to cut out our plan to add object details. However, we have a plan to get basic information about items from the image. This would likely just add up to two adjectives per sentence, which would help with realism. If rushed, though, it could introduce inaccuracies. 
 
 ### Evaluation and Results
-We used a survey to gather information on how successful our captions were, which includes a matching section, and questions about the naturalness and helpfulness of the captions. The matching section had four questions that had a caption and three options for a corresponding image. The respondents got half of the questions correct, and for the other two questions, the correct answer was the second most common. This shows that the captions are not as effective as they could be yet. They are somewhat understandable but not completely clear. We also had the respondents rate how natural the captions sounded and there was an overall average of around 2.5, which is exactly in the middle of the rating scale that we used. The averages for the individual questions range from 1.6 to 3.6, which suggest that we could improve the naturalness of the captions quite a bit. It also suggests that some captions are better than others. We also measured helpfulness and found a similar range with an overall average 2.7. This suggests that the captions would need to improve the captioning before it could be useful to people. Overall, our captions were found to be alright but with a lot of room for improvement.
+We used a survey to gather information on how successful our captions were, which includes a matching section, and questions about the naturalness and helpfulness of the captions. The matching section had four questions that had a caption and three possible options for a corresponding image. For each question, the order of the options was randomized for each participant. The respondents got one question correct, and for the other three questions the correct answer was the second most common. This shows that the captions are not as effective as they could be yet. They are somewhat understandable but not completely clear. We also had the respondents rate how natural the captions sounded and there was an overall average of around 2.5, which is exactly in the middle of the rating scale that we used. The averages for the individual questions range from 1.6 to 3.6, which suggest that we could improve the naturalness of the captions quite a bit. It also suggests that some captions are better than others. We also measured helpfulness and found a similar range with an overall average 2.7. This suggests that the captions would need to improve the captioning before it could be useful to people. Overall, our captions were found to be alright but with a lot of room for improvement.
 
 The captions that each of the next three tables reference are stored here.
 
@@ -112,10 +119,11 @@ The captions that each of the next three tables reference are stored here.
 |:------:|:------:|:------:|:------:|
 | A darkslate grey bus is adjacent to a bus. A bus is below a silver bird. A bus is beside a bird. | The gray person is holding the black elephant. The person is holding the elephant. A elephant is beside a elephant. | A dark khaki person is to the right of a person. A person is to the right of a dark olive green banana. A person is above a banana. A person is above a banana. A banana is beside a banana. | A maroon teddy bear is holding a teddy bear. A teddy bear is holding a teddy bear. A teddy bear is holding a teddy bear. |
 
-![image](https://user-images.githubusercontent.com/54555630/80942644-ed18be80-8daa-11ea-934a-9fbc0ca3c9ec.png) </br> 
-This is an example of a matching question in the survey.
+Below is an example of a matching question in the survey. Google Forms would not allow for the removal of the text: "Option 1", "Option 2", or "Option 3", as some text needed to be assigned to the image.
 
-The following table and graph shows the number of people that chose each option for each question in the matching section. The correct answer for each is starred. As you can see, captions three and four most people got correct, but captions one and two were not.
+![image](https://user-images.githubusercontent.com/54555630/80942644-ed18be80-8daa-11ea-934a-9fbc0ca3c9ec.png) 
+
+The following table and graph shows the number of people that chose each option for each question in the matching section. The correct answer for each is starred. As you can see, most people got caption four correct, but captions one, two, and three were not. However, for captions one, two, and three, the correct answer was the second most selected answer.
 
 ![Counts of Image Selection by Option](https://user-images.githubusercontent.com/35882267/80967266-ac856900-8ddb-11ea-91b9-14a4293d95ad.png)
 
@@ -154,12 +162,13 @@ Our survey is linked [here](https://docs.google.com/forms/d/1AErXKhsPgB2svVDI0yZ
 
 ### Files:
 **Code:**
-* grab_model.ipynb - old notebook...think it was just testing the COCO dataset
-* maskrcnn.ipynb - does vision stuff - gets data to be used by nlpstuff to make sentences
-* nlpstuff.ipynb - does NLP stuff - makes sentences
+* grab_model.ipynb - An old notebook for testing the COCO dataset.
+* maskrcnn.ipynb - Main Computer Vision code notebook. This notebook gets the data that is to be used by the nlpstuff notebook to generate sentences.
+* helper_fcns.py - Computer Vision helper functions for maskrcnn notebook.
+* nlpstuff.ipynb - A notebook containing only NLP functions. This notebook is what eventually generates the sentences.
 
 **JSON:**
-* results.json, failed.json - old method to transfer data about one image to NLP notebook
-* everything.json - transfers data about (currently) 200 images to NLP notebook
-* final_short_results.json - final results from NLP notebook, shortened version
-* final_long_results.json - unshortened version
+* results.json, failed.json - Old json files used to transfer data about one image to NLP notebook
+* everything.json - Current json file that is used to transfer data about (currently) 200 images to NLP notebook.
+* final_short_results.json - Final results from NLP notebook, shortened version (as some descriptions can be very long).
+* final_long_results.json - Same as the previous file, just longer.
