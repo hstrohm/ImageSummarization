@@ -166,7 +166,7 @@ The following table and graph shows the average helpfulness of the caption as ra
 |:------:|:------:|:------:|:------:|:------:|
 | 2.000  | 2.522  | 2.913	 | 3.522  | 2.739  |
 
-Our survey is linked [here](https://docs.google.com/forms/d/1AErXKhsPgB2svVDI0yZcdJ-jh3XHiOOCuka5DMcZZtM/edit?ts=5eaef2a2). </br>
+Our survey is linked [here](https://docs.google.com/forms/d/1AErXKhsPgB2svVDI0yZcdJ-jh3XHiOOCuka5DMcZZtM/edit?ts=5eaef2a2). 
 
 ### Key Takeaways
 * When many objects are detected, it is hard to succinctly summarize the image as it's hard to determine which of those objects are the most important in this case. Something like size would miss important small objects and detection certainly from the NN doesn't make sense at all. 
