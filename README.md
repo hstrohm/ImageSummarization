@@ -113,11 +113,22 @@ As for adding color to the sentences, we tried two methods. The first of which i
 
 Two other small things that are done are picking an appropriate article (a/the) and, in the instance of having three or more instances of the same label, summarizing them in one sentence. 
 
-Some example sentences would look like: 
+Following are some example summaries along with their respective image: 
 
+| Example 1 | Example 2 | Example 3|
+|---|---|---|
+| ![image](https://user-images.githubusercontent.com/54952909/80979039-74d2ed00-8dec-11ea-8ad4-6f4b716c9fbf.jpg) | ![image](https://user-images.githubusercontent.com/54952909/80980061-caf46000-8ded-11ea-9ad6-ddb10fa06d30.jpg) | ![image](https://user-images.githubusercontent.com/54952909/80980331-20307180-8dee-11ea-9970-f4c5f098178f.jpg) |
+| A darkgrey mouse is to the right of a gray laptop. A mouse is to the left of a darkgrey keyboard. A mouse is beside a darkgrey tv. A mouse is to the left of a darkgrey mouse. The laptop is beside the keyboard. | A black chair is beside a black dining table. A chair is beside a dimgrey bed. A chair is beside a darkgrey dining table. A chair is beside a black chair. A dining table is beside a bed. | The cat is black. |
+
+| Bad Example 1 | Bad Example 2 |
+|---|---|
+| ![image](https://user-images.githubusercontent.com/54952909/80981167-34c13980-8def-11ea-8516-be22c3c1fb98.jpg)| ![image](https://user-images.githubusercontent.com/54952909/80982314-c7160d00-8df0-11ea-92a1-0736abe512cb.jpg) |
+| The silver cup is holding the black knife. | There are many person. A black cell phone is to the right of a person. A cell phone is to the left of a person. A cell phone is to the right of a person. A cell phone is adjacent to a lightgrey cell phone. |
 
 ### Evaluation and Results
 We used a survey to gather information on how successful our captions were, which includes a matching section, and questions about the naturalness and helpfulness of the captions. The matching section had four questions that had a caption and three possible options for a corresponding image. For each question, the order of the options was randomized for each participant. The respondents got one question correct, and for the other three questions the correct answer was the second most common. This shows that the captions are not as effective as they could be yet. They are somewhat understandable but not completely clear. We also had the respondents rate how natural the captions sounded and there was an overall average of around 2.5, which is exactly in the middle of the rating scale that we used. The averages for the individual questions range from 1.6 to 3.6, which suggest that we could improve the naturalness of the captions quite a bit. It also suggests that some captions are better than others. We also measured helpfulness and found a similar range with an overall average 2.7. This suggests that the captions would need to improve the captioning before it could be useful to people. Overall, our captions were found to be alright but with a lot of room for improvement.
+
+*Note:* After this survey was conducted, the results were changed so as to not assign people a color. 
 
 The captions that each of the next three tables reference are stored here.
 
