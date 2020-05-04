@@ -99,7 +99,37 @@ Results of k-means clustering for the bowl object. Majority Cluster Color: Dim G
 #### NLP: Sentence Building
 
 ### Evaluation
-To evaluate our algorithm, we propose multiple methods. The first method would be to test if humans can determine which audio recording or text transcriptions match with which image. This will help us determine if our description is understandable and accurate. The next method would be to test if a computer algorithm can match our description with the correct image using the algorithm created by Socher et al. or [3] Finally, we can create a set of descriptions for each image by hand, and present them to people to see if they can pick out the generated description. This will help us to determine how natural our descriptions sound.
+We used a survey to gather information on how successful our captions were, which includes a matching section, and questions about the naturalness and helpfulness of the captions. The matching section had four questions that had a caption and three options for a corresponding image. The respondents got half of the questions correct, and for the other two questions, the correct answer was the second most common. This shows that the captions are not as effective as they could be yet. They are somewhat understandable but not completely clear. We also had the respondents rate how natural the captions sounded and there was an overall average of around 2.5, which is exactly in the middle of the rating scale that we used. The averages for the individual questions range from 1.6 to 3.6, which suggest that we could improve the naturalness of the captions quite a bit. It also suggests that some captions are better than others. We also measured helpfulness and found a similar range with an overall average 2.7. This suggests that the captions would need to improve the captioning before it could be useful to people. Overall, our captions were found to be alright but with a lot of room for improvement.
+
+The captions that each of the next three tables reference are stored here.
+| C1     | C2     | C3     | C4     |
+|:------:|:------:|:------:|:------:|
+| A darkslate grey bus is adjacent to a bus. A bus is below a silver bird. A bus is beside a bird. | The gray person is holding the black elephant. The person is holding the elephant. A elephant is beside a elephant. | A dark khaki person is to the right of a person. A person is to the right of a dark olive green banana. A person is above a banana. A person is above a banana. A banana is beside a banana. | A maroon teddy bear is holding a teddy bear. A teddy bear is holding a teddy bear. A teddy bear is holding a teddy bear. |
+
+![image](https://user-images.githubusercontent.com/54555630/80942644-ed18be80-8daa-11ea-934a-9fbc0ca3c9ec.png) </br> 
+This is an example of a matching question in the survey.
+
+The following table shows the number of people that chose each option for each question in the matching section. The correct answer for each is starred. As you can see, captions three and four most people got correct, but captions one and two were not.
+
+|          | C1     | C2     | C3     | C4     |
+|:--------:|:------:|:------:|:------:|:------:|
+| Option 1 | 7*    	| 7*  	 | 8	    | 18*    |
+| Option 2 | 3      | 1      | 13*    | 5      |
+| Option 3 | 12     | 13     | 1      | 0      |
+
+The following table shows the average naturalness of the caption as rated by each respondant. This section gives the image and the corresponding caption and asks the respondant to rate how natural the sentence is on a scale from one to five.
+
+| C1     | C2     | C3     | C4     | Total  |
+|:------:|:------:|:------:|:------:|:------:|
+| 1.565  | 2.217  | 2.696	 | 3.609  | 2.522  |
+
+The following table shows the average helpfulness of the caption as rated by each respondant. This section gives the image and the corresponding caption and asks the respondant to rate how helpful the sentence is on a scale from one to five.
+
+| C1     | C2     | C3     | C4     | Total  |
+|:------:|:------:|:------:|:------:|:------:|
+| 2.000  | 2.522  | 2.913	 | 3.522  | 2.739  |
+
+Our survey is linked [here](https://docs.google.com/forms/d/1AErXKhsPgB2svVDI0yZcdJ-jh3XHiOOCuka5DMcZZtM/edit?ts=5eaef2a2). </br>
 
 ### Results
 
